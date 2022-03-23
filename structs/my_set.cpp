@@ -25,29 +25,31 @@ struct my_set{
     vector <vector <int>> v;
     int n;
     my_set(): v(20), n(0){}
-};
 
-void push(my_set &s,int x){
-    //O(n&-n) - request,
-    //~O(NlogN),small const
-    s.v[0].pb(x), s.n++;
-    if(sz(s.v[0]) > 1) sort(all(s.v[0]));
-    for(int i=0;sz(s.v[i]) > (1<<i);i++){
-        if(s.v[i+1].empty()) swap(s.v[i],s.v[i+1]);
-        else{
-            vector <int> res(sz(s.v[i]) + sz(s.v[i+1]));
-            merge(all(s.v[i]),all(s.v[i+1]),res.begin());
-            res.swap(s.v[i+1]); vector <int> ().swap(s.v[i]);
+    void push(int x){
+        //O(n&-n) - request,
+        //~O(NlogN),small const
+        v[0].eb(x), n++;
+        if(sz(v[0]) > 1) sort(all(v[0]));
+
+        for(int i=0;sz(v[i]) > (1<<i);i++){
+            if(v[i+1].empty()) swap(v[i],v[i+1]);
+            else{
+                vector <int> res(sz(v[i]) + sz(v[i+1]));
+                merge(all(v[i]),all(v[i+1]),res.begin());
+                res.swap(v[i+1]); vector <int> ().swap(v[i]);
+            }
         }
     }
-}
 
-int count_lower(const my_set &s,int x){
-    //O(log(logn!)) - request ~~ O(logn)
-    int res = 0;
-    for(auto &e:s.v) res += lower_bound(all(e),x) - e.begin();
-    return res;
-}
+    int count_lower(int x) const {
+        //O(log(logn!)) - request ~~ O(logn)
+        int res = 0;
+        for(auto &e:v) res += lower_bound(all(e),x) - e.begin();
+        return res;
+    }
+};
+
 
 int main(){
     ios::sync_with_stdio(0); cin.tie(0);
